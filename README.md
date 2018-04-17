@@ -28,8 +28,8 @@ aws cloudformation create-stack \
   --capabilities CAPABILITY_IAM \
   --tags Key=alarm,Value=billing \
   --parameters \
-      ParameterKey=BillingAlertEmailParameter,ParameterValue=${BillingAlertEmailParameter} \
-      ParameterKey=MonthlySpendLimitParameter,ParameterValue=${MonthlySpendLimitParameter} \
+      ParameterKey=BillingAlertEmailParameter,ParameterValue=${BILLING_ALARM_EMAIL} \
+      ParameterKey=MonthlySpendLimitParameter,ParameterValue=${BILLING_ALARM_LIMIT} \
       ParameterKey=AlarmEvaluationPeriod,ParameterValue=one-hour 
 
 ```
