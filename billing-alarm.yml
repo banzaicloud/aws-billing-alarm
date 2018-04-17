@@ -1,0 +1,88 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Deploys an email based billing alert for total estimated charges
+Parameters: 
+  BillingAlertEmailParameter: 
+    Description: Enter the email address, you want to receive emails about billing alerts
+    Type: String
+    MinLength: '5'
+    #AllowedPattern: \w[a-zA-Z0-9_\-\.]*@\w[a-zA-Z0-9\-\.]*
+    AllowedPattern: >-
+      ^(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])$
+    ConstraintDescription: Must be a valid email address.
+  MonthlySpendLimitParameter:
+    Default: 100
+    Description: The amount of USD you want tu use as billing alert.
+    Type: Number
+    MinValue: 1
+    MaxValue: 65535
+  AlarmEvaluationPeriod:
+      Description: How long the alarm threshold should be exceeded
+      Default: six-hours
+      Type: String
+      AllowedValues:
+          - one-minute
+          - one-hour
+          - six-hours
+          - one-day
+Metadata: 
+  AWS::CloudFormation::Interface:
+    ParameterGroups: 
+      - 
+        Label:
+          default: "Billing Alarm Configuration"
+        Parameters: 
+          - BillingAlertEmailParameter
+          - MonthlySpendLimitParameter
+      - 
+        Label:
+          default: "Advanced Configuration"
+        Parameters: 
+          - AlarmEvaluationPeriod
+    ParameterLabels: 
+      BillingAlertEmailParameter: 
+        default: Email address for alerts 
+      MonthlySpendLimitParameter: 
+        default: Spending Limit (USD) 
+      AlarmEvaluationPeriod: 
+        default: How long the limit should be triggered?
+
+Mappings:
+  EvalPeridMap:
+      one-minute:
+          seconds: 60
+      one-hour:
+          seconds: 3600
+      six-hours:
+          seconds: 21600
+      one-day:
+          seconds: 86400
+
+Resources:
+  HighBillingEstimateAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: HighBillingEstimateAlarm
+      AlarmDescription: !Sub >
+        "Alarm if AWS spending is over ${MonthlySpendLimitParameter} usd"
+      Namespace: AWS/Billing
+      MetricName: EstimatedCharges
+      Dimensions:
+      - Name: Currency
+        Value: USD
+      Statistic: Maximum
+      Period: !FindInMap [ EvalPeridMap, !Ref AlarmEvaluationPeriod, seconds ]
+      EvaluationPeriods: '1'
+      Threshold: !Ref MonthlySpendLimitParameter 
+      ComparisonOperator: GreaterThanThreshold
+      AlarmActions:
+      - Ref: BillingAlarmTopic
+      InsufficientDataActions:
+      - Ref: BillingAlarmTopic
+  BillingAlarmTopic:
+    Type: "AWS::SNS::Topic"
+    Properties: 
+      Subscription: 
+        - 
+          Endpoint: "gipszlyakab+delme@gmail.com"
+          Protocol: email
+      TopicName: BillingAlarmTopic
