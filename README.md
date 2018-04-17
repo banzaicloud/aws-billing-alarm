@@ -20,14 +20,16 @@ If you prefer the terminal way:
 export BILLING_ALARM_EMAIL=youremail@gmail.com
 export BILLING_ALARM_LIMIT=123
 
-aws cloudformation deploy \
+
+aws cloudformation create-stack \
+  --template-url https://s3-eu-west-1.amazonaws.com/lp-lambda-go/billing-alarm.yml \
   --region us-east-1 \
-  --template-file billing-alarm.yml \
-  --stack-name billing-alarm  \
+  --stack-name billing-alarm \
   --capabilities CAPABILITY_IAM \
-  --tag alert=billing \
-  --parameter-overrides \
-      BillingAlertEmailParameter=${BILLING_ALARM_EMAIL} \
-      MonthlySpendLimitParameter=${BILLING_ALARM_LIMIT} \
-      AlarmEvaluationPeriod=one-hour
+  --tags Key=alarm,Value=billing \
+  --parameters \
+      ParameterKey=BillingAlertEmailParameter,ParameterValue=${BillingAlertEmailParameter} \
+      ParameterKey=MonthlySpendLimitParameter,ParameterValue=${MonthlySpendLimitParameter} \
+      ParameterKey=AlarmEvaluationPeriod,ParameterValue=one-hour 
+
 ```

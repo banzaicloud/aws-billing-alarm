@@ -1,8 +1,8 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: Deploys an email based billing alert for total estimated charges
+Description: Deploys an email based billing alarm for total estimated charges
 Parameters: 
   BillingAlertEmailParameter: 
-    Description: Enter the email address, you want to receive emails about billing alerts
+    Description: Enter the email address, you want to receive emails about billing alarms
     Type: String
     MinLength: '5'
     #AllowedPattern: \w[a-zA-Z0-9_\-\.]*@\w[a-zA-Z0-9\-\.]*
@@ -11,7 +11,7 @@ Parameters:
     ConstraintDescription: Must be a valid email address.
   MonthlySpendLimitParameter:
     Default: 100
-    Description: The amount of USD you want tu use as billing alert.
+    Description: The amount of USD you want tu use as billing alarm.
     Type: Number
     MinValue: 1
     MaxValue: 65535
@@ -40,7 +40,7 @@ Metadata:
           - AlarmEvaluationPeriod
     ParameterLabels: 
       BillingAlertEmailParameter: 
-        default: Email address for alerts 
+        default: Email address for alarms 
       MonthlySpendLimitParameter: 
         default: Spending Limit (USD) 
       AlarmEvaluationPeriod: 
