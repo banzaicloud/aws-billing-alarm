@@ -33,4 +33,5 @@ main() {
             ParameterKey=MonthlySpendLimitParameter,ParameterValue=${MonthlySpendLimitParameter} \
             ParameterKey=AlarmEvaluationPeriod,ParameterValue=one-hour 
 }
-[[ "$0" == "$BASH_SOURCE" ]] && main "$@" || true
+
+main "$@"
