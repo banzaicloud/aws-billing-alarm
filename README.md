@@ -1,3 +1,7 @@
+
+Creating an AWS billing alarm is pretty straightforward, and you should really use it. You can avoid
+"surprise bills" at the end of the month.
+
 ## Billing Alert
 
 For simple cost management, aws can automagically email if aws bills exceed a limit. 
@@ -33,3 +37,7 @@ aws cloudformation create-stack \
       ParameterKey=AlarmEvaluationPeriod,ParameterValue=one-hour 
 
 ```
+
+## Manual procss on consol
+
+If you want to do the steps un the ui follow the [description](manual-process.md)
