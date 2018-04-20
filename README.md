@@ -1,6 +1,8 @@
 
 Creating an AWS billing alarm is pretty straightforward, and you should really use it. You can avoid
-"surprise bills" at the end of the month.
+"surprise bills" at the end of the month. 
+
+For further details reads this [post](https://banzaicloud.com/blog/slackbot/).
 
 ## Billing Alert
 
