@@ -40,6 +40,6 @@ aws cloudformation create-stack \
 
 ```
 
-## Manual procss on consol
+## Manual process on AWS console
 
-If you want to do the steps un the ui follow the [description](manual-process.md)
+If you want to manually do the steps on the AWS console follow this [description](manual-process.md)
